@@ -6,23 +6,29 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import InboxIcon from "@mui/icons-material/MoveToInbox";
-import MailIcon from "@mui/icons-material/Mail";
 import InfoIcon from "@mui/icons-material/Info";
 import HomeIcon from "@mui/icons-material/Home";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import LogoutIcon from "@mui/icons-material/Logout";
+import AxiosInstance from "./AxiosInstance";
 
 const drawerWidth = 240;
 
 export default function NavBar(props) {
+  const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname;
   const { content } = props;
+  const logoutUser = () => {
+    AxiosInstance.post(`logoutall/`, {}).then(() => {
+      localStorage.removeItem("Token");
+      navigate("/");
+    });
+  };
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -32,7 +38,7 @@ export default function NavBar(props) {
       >
         <Toolbar>
           <Typography variant="h6" noWrap component="div">
-            Clipped drawer
+            User Authentication App
           </Typography>
         </Toolbar>
       </AppBar>
@@ -72,6 +78,14 @@ export default function NavBar(props) {
                   <InfoIcon />
                 </ListItemIcon>
                 <ListItemText primary={"About"} />
+              </ListItemButton>
+            </ListItem>
+            <ListItem key={3} disablePadding>
+              <ListItemButton onClick={logoutUser}>
+                <ListItemIcon>
+                  <LogoutIcon />
+                </ListItemIcon>
+                <ListItemText primary={"Logout"} />
               </ListItemButton>
             </ListItem>
           </List>
